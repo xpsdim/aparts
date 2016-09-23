@@ -62,6 +62,13 @@ namespace Aparts.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    var isEmailConfirmed =
+                        await _userManager.IsEmailConfirmedAsync(new ApplicationUser() {UserName = model.Email});
+                    if (!isEmailConfirmed)
+                    {
+                        ModelState.AddModelError(string.Empty, "You need to confirm your email.");
+                        return View(model);
+                    }
                     _logger.LogInformation(1, "User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
