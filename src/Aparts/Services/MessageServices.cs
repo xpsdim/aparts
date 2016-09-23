@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace Aparts.Services
 {
@@ -10,10 +10,28 @@ namespace Aparts.Services
     // For more details see this link http://go.microsoft.com/fwlink/?LinkID=532713
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
+        private readonly SmtpSettings _smtpSettings;
+
+        public AuthMessageSender(IOptions<SmtpSettings> smtpSettings)
+        {
+            _smtpSettings = smtpSettings.Value;
+        }
+
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            MailMessage mailMessage = new MailMessage("noreply@apart.system", email)
+            {
+                Subject = subject,
+                Body = message,
+                IsBodyHtml = true
+            };
+            SmtpClient smtpClient = new SmtpClient()
+            {
+                Host = _smtpSettings.Host,
+                Port = _smtpSettings.Port,
+                Credentials = new NetworkCredential(_smtpSettings.UserName, _smtpSettings.Password)
+            };
+            return smtpClient.SendMailAsync(mailMessage);
         }
 
         public Task SendSmsAsync(string number, string message)
