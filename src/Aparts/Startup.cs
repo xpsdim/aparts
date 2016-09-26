@@ -43,6 +43,7 @@ namespace Aparts
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+            
 
             services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
 
@@ -73,6 +74,8 @@ namespace Aparts
             app.UseStaticFiles();
 
             app.UseIdentity();
+
+            app.SeedData();
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 

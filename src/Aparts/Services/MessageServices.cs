@@ -20,7 +20,7 @@ namespace Aparts.Services
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            MailMessage mailMessage = new MailMessage(_smtpSettings.FromEmail, email)
+            MailMessage mailMessage = new MailMessage(_smtpSettings.AdminEmail, email)
             {
                 Subject = subject,
                 Body = message,
@@ -39,6 +39,11 @@ namespace Aparts.Services
         {
             // Plug in your SMS service here to send a text message.
             return Task.FromResult(0);
+        }
+
+        public SmtpSettings SmtpSettings()
+        {
+            return _smtpSettings;
         }
     }
 }
