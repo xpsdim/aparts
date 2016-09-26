@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Aparts.Models.MessageModels;
 using Microsoft.Extensions.Options;
 
 namespace Aparts.Services
@@ -19,7 +20,7 @@ namespace Aparts.Services
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            MailMessage mailMessage = new MailMessage("noreply@apart.system", email)
+            MailMessage mailMessage = new MailMessage(_smtpSettings.FromEmail, email)
             {
                 Subject = subject,
                 Body = message,

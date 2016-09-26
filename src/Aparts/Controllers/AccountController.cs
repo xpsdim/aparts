@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -60,10 +58,12 @@ namespace Aparts.Controllers
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                
                 if (result.Succeeded)
                 {
-                    var isEmailConfirmed =
-                        await _userManager.IsEmailConfirmedAsync(new ApplicationUser() {UserName = model.Email});
+                    var userEmail = model.Email.ToLower().Trim();
+                    var user = await _userManager.FindByEmailAsync(userEmail);
+                    var isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
                     if (!isEmailConfirmed)
                     {
                         ModelState.AddModelError(string.Empty, "You need to confirm your email.");
@@ -89,6 +89,12 @@ namespace Aparts.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        public IActionResult ConfirmEmailInfo(LoginViewModel model)
+        {
             return View(model);
         }
 
@@ -123,9 +129,8 @@ namespace Aparts.Controllers
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                     await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                         $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
-                    //await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("ConfirmEmailInfo");
                 }
                 AddErrors(result);
             }
