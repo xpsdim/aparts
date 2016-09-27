@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Aparts.Models;
 using Aparts.Services;
 using Microsoft.AspNetCore.Builder;
@@ -41,15 +42,14 @@ namespace Aparts.Data
                 {
                     var code = userManager.GenerateEmailConfirmationTokenAsync(admin).Result;
                     var res = userManager.ConfirmEmailAsync(admin, code).Result;
+                    var res1 = emailSender.SendEmailAsync(emailSender.SmtpSettings().AdminEmail,
+                        "Your e-mail is admin account in new instance of Apart sytem.",
+                        $"Use this e-mail as login and password -'{defAdminPassword}'. Please change this password as soon as possible.");
+                    res1.Wait();
                 }
             }
-
             var res0 = userManager.AddToRolesAsync(admin, appRoles).Result;
-
             db.SaveChanges();
-
-            emailSender.SendEmailAsync(emailSender.SmtpSettings().AdminEmail, "Your e-mail is admin account in new instance of Apart sytem.",
-                        $"Use this e-mail as login and password -'{defAdminPassword}'. Please change this password as soon as possible.");
         }
     }
 }
