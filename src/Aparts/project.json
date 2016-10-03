@@ -1,7 +1,9 @@
-﻿{
+{
   "userSecretsId": "aspnet-Aparts-01fc644c-08cb-4efc-ad94-2cef201cb802",
 
   "dependencies": {
+    "Kendo.Mvc": "2016.2.616",
+    "Microsoft.AspNet.Identity.Core": "2.2.1",
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "1.0.0",

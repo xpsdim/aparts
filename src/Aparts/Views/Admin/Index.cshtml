@@ -1,0 +1,76 @@
+﻿@model UserRolesModel[]
+@{
+    ViewData["Title"] = "Manage user accounts";
+}
+<h2>@ViewData["Title"].</h2>
+<div id="grid"></div>
+@section scripts
+{
+    <script>
+        var rolesDs = [];
+
+
+        function rolesEditor(container, options) {
+            $("<select multiple='multiple' data-bind='value :roles'/>")
+                .appendTo(container)
+                .kendoMultiSelect({
+                    autoBind: false,
+                    dataSource: rolesDs
+                });
+        }
+
+        $(document).ready(function () {
+            $.ajax({ url: "/Admin/RolesList" }).done(function (data) {
+                rolesDs = data;
+            });
+
+            $("#grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: "/Admin/UserList",
+                        update: {
+                            type: "POST",
+                            url: "/Admin/UpdateRoles"
+                        }
+                    },
+                    pageSize: 10,
+                    autoSync: true,
+                    schema: {
+                        data: "data",
+                        model: {
+                            id: "id",
+                            fields: {
+                                id: { editable: false },
+                                email: { editable: false },
+                                roles: { editable: true, sortable: false }
+                            }
+                        }
+                    }
+                },
+                sortable: true,
+                editable: true,
+                pageable: {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                columns: [
+                    {
+                        field: "id",
+                        title: "Id",
+                        hidden: true
+                    }, {
+                        field: "email",
+                        title: "Email",
+                        editable: false
+                    }, {
+                        field: "roles",
+                        title: "Roles",
+                        template: "#= roles.join(', ') #",
+                        editor: rolesEditor
+                    }
+                ]
+            });
+        });
+    </script>
+}
