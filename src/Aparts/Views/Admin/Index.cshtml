@@ -3,6 +3,7 @@
     ViewData["Title"] = "Manage user accounts";
 }
 <h2>@ViewData["Title"].</h2>
+@Html.AntiForgeryToken()
 <div id="grid"></div>
 
 @section scripts
@@ -30,7 +31,10 @@
                         read: "/Admin/UserList",
                         update: {
                             type: "POST",
-                            url: "/Admin/UpdateRoles"
+                            url: "/Admin/UpdateRoles",
+                            data: {
+                                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                            }
                         }
                     },
                     pageSize: 10,

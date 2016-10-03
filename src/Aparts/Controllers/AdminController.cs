@@ -54,6 +54,7 @@ namespace Aparts.Controllers
             return Json(_manageUserService.GetAllRoles());
         }
         
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateRoles(UserRolesModel model)
         {
             var user = await _userManager.FindByIdAsync(model.Id);
