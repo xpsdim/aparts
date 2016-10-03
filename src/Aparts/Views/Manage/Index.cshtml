@@ -1,4 +1,6 @@
-﻿@model IndexViewModel
+﻿@using Aparts.Data
+
+@model IndexViewModel
 @{
     ViewData["Title"] = "Manage your account";
 }
@@ -8,7 +10,11 @@
 
 <div>
     <h4>Change your account settings</h4>
-    <hr />
+    <hr/>
+    <dl class="dl-horizontal">
+        <dt>Theme:</dt>
+        <dd><input class="themeChooser" value="default"/></dd>
+    </dl>
     <dl class="dl-horizontal">
         <dt>Password:</dt>
         <dd>
@@ -69,3 +75,62 @@
         </dd>
     </dl>
 </div>
+@section scripts
+{
+    <script>
+        var themes = [
+            { text: "Black", value: "black" },
+            { text: "Blue Opal", value: "blueopal" },
+            { text: "Bootstrap", value: "bootstrap" },
+            { text: "Default", value: "default" },
+            { text: "Fiori", value: "fiori" },
+            { text: "Flat", value: "flat" },
+            { text: "High Contrast", value: "highcontrast" },
+            { text: "Material", value: "material" },
+            { text: "Materia lBlack", value: "materialblack" },
+            { text: "Metro", value: "metro" },
+            { text: "Metro Black", value: "metroblack" },
+            { text: "Moonlight", value: "moonlight" },
+            { text: "Nova", value: "nova" },
+            { text: "Office 365", value: "office365" },
+            { text: "Silver", value: "silver" },
+            { text: "Uniform", value: "uniform" }
+        ];
+
+        var selectedTheme = "bootstrap";
+        @{
+            
+                var themeClaim = Context.User.Claims.SingleOrDefault(c => c.Type == Consts.KendoThemePropName);
+                if (themeClaim != null)
+                {
+                    <text>selectedTheme = '@themeClaim.Value';</text>
+                }
+        }
+        
+
+
+        $(".themeChooser").kendoDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: themes,
+            value: selectedTheme,
+            change: function (e) {
+                var theme = (this.value() || "default").toLowerCase();
+
+                changeTheme(theme);
+            }
+        });
+
+        // loads new stylesheet
+        function changeTheme(skinName) {
+            $.ajax({
+                url: "/Manage/SetTheme",
+                method: "POST",
+                data: { themeName: skinName }
+            }).done(function() {
+                location.reload();
+            });
+        };
+
+    </script>
+}

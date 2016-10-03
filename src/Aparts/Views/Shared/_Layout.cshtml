@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Policy
+@using Aparts.Data
+@using Aparts.Models
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -16,7 +19,21 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true"/>
     </environment>
     <link rel="stylesheet" href="~/lib/kendo/dist/css/kendo.common.min.css"/>
-    <link rel="stylesheet" href="~/lib/kendo/dist/css/kendo.bootstrap.min.css" />
+    @{
+        string themeName = Consts.DefaultKendoTheme;
+        
+        if (Context.User.Identity.IsAuthenticated)
+        {
+            var themeClaim = Context.User.Claims.SingleOrDefault(c => c.Type == Consts.KendoThemePropName);
+            if (themeClaim != null)
+            {
+                themeName = themeClaim.Value;
+            }
+        }
+        
+        string themeUrl = Url.Content($"~/lib/kendo/dist/css/kendo.{themeName}.min.css");
+    }
+    <link rel="stylesheet" href="@themeUrl"/>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">

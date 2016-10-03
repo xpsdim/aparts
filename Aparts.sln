@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Aparts", "src\Aparts\Aparts.xproj", "{E042136A-C1AE-4869-B741-BE77F96E2F0D}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database", "Database\Database.sqlproj", "{851082A5-7615-42A9-9794-C74D69546BC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,11 +24,18 @@ Global
 		{E042136A-C1AE-4869-B741-BE77F96E2F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E042136A-C1AE-4869-B741-BE77F96E2F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E042136A-C1AE-4869-B741-BE77F96E2F0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{851082A5-7615-42A9-9794-C74D69546BC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{851082A5-7615-42A9-9794-C74D69546BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{851082A5-7615-42A9-9794-C74D69546BC2}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{851082A5-7615-42A9-9794-C74D69546BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{851082A5-7615-42A9-9794-C74D69546BC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{851082A5-7615-42A9-9794-C74D69546BC2}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E042136A-C1AE-4869-B741-BE77F96E2F0D} = {4DE2FD6D-84A3-48C7-8315-7A0C1099E2A4}
+		{851082A5-7615-42A9-9794-C74D69546BC2} = {4DE2FD6D-84A3-48C7-8315-7A0C1099E2A4}
 	EndGlobalSection
 EndGlobal

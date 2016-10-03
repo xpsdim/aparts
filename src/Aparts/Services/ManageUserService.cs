@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Aparts.Data;
 using Aparts.Models;
-using Aparts.Models.AccountViewModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace Aparts.Services
 {

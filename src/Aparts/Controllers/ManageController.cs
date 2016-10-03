@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Aparts.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +18,7 @@ namespace Aparts.Controllers
     public class ManageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ManageUserService _manageUserService;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
@@ -26,13 +29,15 @@ namespace Aparts.Controllers
         SignInManager<ApplicationUser> signInManager,
         IEmailSender emailSender,
         ISmsSender smsSender,
-        ILoggerFactory loggerFactory)
+        ILoggerFactory loggerFactory,
+        ManageUserService manageUserService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<ManageController>();
+            _manageUserService = manageUserService;
         }
 
         //
@@ -326,6 +331,19 @@ namespace Aparts.Controllers
             var result = await _userManager.AddLoginAsync(user, info);
             var message = result.Succeeded ? ManageMessageId.AddLoginSuccess : ManageMessageId.Error;
             return RedirectToAction(nameof(ManageLogins), new { Message = message });
+        }
+
+        public async Task<ActionResult> SetTheme(string themeName)
+        {
+            var themeClaim = User.Claims.FirstOrDefault(c => c.Type == Consts.KendoThemePropName);
+            var currentUser = await GetCurrentUserAsync();
+            if (themeClaim != null)
+            {
+                await _userManager.RemoveClaimsAsync(currentUser, new [] { themeClaim });
+            }
+            await _userManager.AddClaimAsync(currentUser, new Claim(Consts.KendoThemePropName, themeName));
+            await _signInManager.RefreshSignInAsync(currentUser);
+            return Json(new { result = "ok" });
         }
 
         #region Helpers
