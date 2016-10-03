@@ -57,7 +57,7 @@ namespace Aparts.Controllers
         public async Task<IActionResult> UpdateRoles(UserRolesModel model)
         {
             var user = await _userManager.FindByIdAsync(model.Id);
-            var newRoles = model.Roles;
+            var newRoles = model.Roles ?? new string[] {};
             var currentUserRoles = await _userManager.GetRolesAsync(user);
             //deleting unselected roles
             foreach (var role in currentUserRoles)
