@@ -6,12 +6,14 @@ using Aparts.Models.AccountViewModels;
 using Aparts.Services;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 
-
 namespace Aparts.Controllers
 {
+
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly ManageUserService _manageUserService;
@@ -51,7 +53,7 @@ namespace Aparts.Controllers
         {
             return Json(_manageUserService.GetAllRoles());
         }
-
+        
         public async Task<IActionResult> UpdateRoles(UserRolesModel model)
         {
             var user = await _userManager.FindByIdAsync(model.Id);
