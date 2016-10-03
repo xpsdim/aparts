@@ -10,18 +10,18 @@
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css"/>
+        <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"/>
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true"/>
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
-    <link rel="stylesheet" href="~/lib/kendo/dist/css/kendo.common.min.css"/>
+    <link rel="stylesheet" href="~/lib/kendo/dist/css/kendo.common.min.css" />
     @{
         string themeName = Consts.DefaultKendoTheme;
-        
+
         if (Context.User.Identity.IsAuthenticated)
         {
             var themeClaim = Context.User.Claims.SingleOrDefault(c => c.Type == Consts.KendoThemePropName);
@@ -30,42 +30,48 @@
                 themeName = themeClaim.Value;
             }
         }
-        
+
         string themeUrl = Url.Content($"~/lib/kendo/dist/css/kendo.{themeName}.min.css");
     }
-    <link rel="stylesheet" href="@themeUrl"/>
+    <link rel="stylesheet" href="@themeUrl" />
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Aparts</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    @if (Context.User.Identity.IsAuthenticated)
+<body class="k-block">
+    @*
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Aparts</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                @if (Context.User.Identity.IsAuthenticated)
 
+                {
+                    if (Context.User.IsInRole("Admin"))
                     {
-                        if (Context.User.IsInRole("Admin"))
-                        {
-                            <li><a asp-area="" asp-controller="Admin" asp-action="Index">Admin</a></li>
-                        }
+                        <li><a asp-area="" asp-controller="Admin" asp-action="Index">Admin</a></li>
                     }
-                    
+                }
                 <!--
                 <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                 <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 -->
-                </ul>
-                @await Html.PartialAsync("_LoginPartial")
-            </div>
+            </ul>
+            @await Html.PartialAsync("_LoginPartial")
+        </div>
+    </div>
+</div>
+    *@
+    <div class="container">
+        <div id="toolbar">
+            @await Html.PartialAsync("_LoginPartial")
         </div>
     </div>
     <div class="container body-content">
@@ -85,14 +91,46 @@
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery">
+
         </script>
         <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
     <script src="~/lib/kendo/dist/js/kendo.all.min.js"></script>
     @RenderSection("scripts", required: false)
+    <script>
+        $("#toolbar").kendoToolBar({
+            items: [
+                {
+                    type: "button",
+                    text: "Home",
+                    url: "@Url.Content("~/")"
+                }
+                @if (Context.User.Identity.IsAuthenticated)
+                {
+                    if (Context.User.IsInRole("Admin"))
+                    {
+                        <text>
+                        ,
+                        {
+                            type: "button",
+                            text: "Administrator",
+                            url: "@Url.Content("~/Admin")"
+                        }
+                        </text>
+                    }
+                }
+                //{ type: "button", text: "Toggle", togglable: true },
+                //{ type: "splitButton", text: "SplitButton", menuButtons: [{ text: "Option 1" }, { text: "Option 2" }] }
+            ]
+        });
+    </script>
+
+
+
 </body>
 </html>
