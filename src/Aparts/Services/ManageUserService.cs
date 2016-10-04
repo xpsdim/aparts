@@ -1,15 +1,18 @@
 ﻿using System.Linq;
 using Aparts.Data;
 using Aparts.Models;
+using Aparts.Models.DLModels;
 
 namespace Aparts.Services
 {
     public class ManageUserService
     {
         private readonly ApplicationDbContext _dbContext;
-        public ManageUserService(ApplicationDbContext dbContext)
+        private readonly ApartsDataContext _partContext;
+        public ManageUserService(ApplicationDbContext dbContext, ApartsDataContext partContext)
         {
             _dbContext = dbContext;
+            _partContext = partContext;
         }
 
         public IQueryable<ApplicationUser> GetUsersForManage()
@@ -21,6 +24,11 @@ namespace Aparts.Services
         public string[] GetAllRoles()
         {
             return _dbContext.Roles.Select(role => role.Name).ToArray();
+        }
+
+        public Stores[] GetAllStores()
+        {
+            return _partContext.Stores.ToArray();
         }
     }
 }

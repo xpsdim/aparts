@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Aparts.Data;
 using Aparts.Models;
+using Aparts.Models.DLModels;
 using Aparts.Models.MessageModels;
 using Aparts.Services;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +40,10 @@ namespace Aparts
         {
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+
+            services.AddDbContext<ApartsDataContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()

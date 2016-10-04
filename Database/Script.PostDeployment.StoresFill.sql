@@ -1,0 +1,10 @@
+﻿insert into Stores(Id, Caption) values(0, 'T0');
+insert into Stores(Id, Caption) values(1, 'T1');
+insert into Stores(Id, Caption) values(2, 'T2');
+insert into Stores(Id, Caption) values(3, 'T3');
+insert into Stores(Id, Caption) values(4, 'T4');
+insert into Stores(Id, Caption) values(5, 'T5');
+insert into Stores(Id, Caption) values(6, 'T6');
+insert into Stores(Id, Caption) values(7, 'T7');
+insert into Stores(Id, Caption) values(8, 'T8');
+insert into Stores(Id, Caption) values(8, 'T9');

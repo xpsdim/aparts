@@ -75,4 +75,5 @@ _[Ss]cripts
 *.ncrunchsolution
 *.dot[Cc]over
 *.tmp
+
 /Database/Database.dbmdl

@@ -79,5 +79,19 @@ namespace Aparts.Controllers
             }
             return Json(new {result = "ok"});
         }
+
+        public IActionResult Storelist()
+        {
+            return Json(_manageUserService
+                .GetAllStores().
+                Select(s => 
+                    new
+                    {
+                        id = s.Id,
+                        caption = s.Caption,
+                        storeManId = s.Storeman,
+                        storeManName = s.Storeman != null ? s.StoremanNavigation.Email : ""
+                    }));
+        }
     }
 }
