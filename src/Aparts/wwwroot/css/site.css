@@ -53,3 +53,7 @@ textarea {
     margin-top: 4px;
     float: right;
 }
+
+.k-multiselect-wrap {
+    padding-top: 2px;
+}

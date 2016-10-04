@@ -6,15 +6,15 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <form asp-area="" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm">
+    <form asp-area="" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" style="display: none;">
         <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
         <button type="submit" class="k-button">Log off</button>
     </form>
 }
 else
 {
-    <div id="loginForm">
-        <a asp-area="" asp-controller="Account" asp-action="Register" class="k-button">Register</a>
-        <a asp-area="" asp-controller="Account" asp-action="Login" class="k-button">Log in</a>
+    <div id="loginForm" style="display: none;">
+        <a asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+        <a asp-area="" asp-controller="Account" asp-action="Login">Log in</a>
     </div>
 }
