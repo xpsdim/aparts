@@ -18,11 +18,13 @@ namespace Aparts.Controllers
     {
         private readonly ManageUserService _manageUserService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApartService _apartService;
 
-        public AdminController(ManageUserService manageUserService, UserManager<ApplicationUser> userManager)
+        public AdminController(ManageUserService manageUserService, UserManager<ApplicationUser> userManager, ApartService apartService)
         {
             _userManager = userManager;
             _manageUserService = manageUserService;
+            _apartService = apartService;
         }
 
         public IActionResult Index()
@@ -42,9 +44,11 @@ namespace Aparts.Controllers
                 {
                     Email = user.Email,
                     Id = user.Id,
-                    Roles = (await _userManager.GetRolesAsync(user)).ToArray()
+                    Roles = (await _userManager.GetRolesAsync(user)).ToArray(),
+                    VisibleStores = _apartService.GetVisibleStores(user.Id)
                 });
-            }
+            };
+                                    
             usersPage.Data = model;
             return Json(usersPage);
         }
@@ -55,7 +59,7 @@ namespace Aparts.Controllers
         }
         
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateRoles(UserRolesModel model)
+        public async Task<IActionResult> UpdateUser(UserRolesModel model)
         {
             var user = await _userManager.FindByIdAsync(model.Id);
             var newRoles = model.Roles ?? new string[] {};
@@ -77,12 +81,17 @@ namespace Aparts.Controllers
             {
                 await _userManager.AddToRolesAsync(user, newRoles);
             }
+            //syncronizing visible stores
+            var currentUserStores = _apartService.Context.AspNetUsers.Single(u => u.Id == user.Id).UserVisibleStores.ToList();
+            //currentUserStores.RemoveAll(true);
+            
+
             return Json(new {result = "ok"});
         }
 
         public IActionResult Storelist()
         {
-            return Json(_manageUserService
+            return Json(_apartService
                 .GetAllStores().
                 Select(s => 
                     new

@@ -7,17 +7,15 @@ namespace Aparts.Services
 {
     public class ManageUserService
     {
-        private readonly ApplicationDbContext _dbContext;
-        private readonly ApartsDataContext _partContext;
+        private readonly ApplicationDbContext _dbContext;        
         public ManageUserService(ApplicationDbContext dbContext, ApartsDataContext partContext)
         {
-            _dbContext = dbContext;
-            _partContext = partContext;
+            _dbContext = dbContext;            
         }
 
         public IQueryable<ApplicationUser> GetUsersForManage()
         {
-            var result = _dbContext.Users;
+            var result = _dbContext.Users; 
             return result;
         }
 
@@ -25,10 +23,6 @@ namespace Aparts.Services
         {
             return _dbContext.Roles.Select(role => role.Name).ToArray();
         }
-
-        public Stores[] GetAllStores()
-        {
-            return _partContext.Stores.ToArray();
-        }
+       
     }
 }

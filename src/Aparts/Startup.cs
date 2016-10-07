@@ -48,8 +48,7 @@ namespace Aparts
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-            
+                .AddDefaultTokenProviders();            
 
             services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
 
@@ -59,6 +58,7 @@ namespace Aparts
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<ManageUserService>();
+            services.AddTransient<ApartService>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
