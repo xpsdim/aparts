@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[Groups]
+(
+	[Id] INT NOT NULL PRIMARY KEY, 
+    [Name] NVARCHAR(256) NOT NULL, 
+    [ReplDate] DATETIME NULL
+)
