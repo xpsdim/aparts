@@ -7,4 +7,4 @@ insert into Stores(Id, Caption) values(5, 'T5');
 insert into Stores(Id, Caption) values(6, 'T6');
 insert into Stores(Id, Caption) values(7, 'T7');
 insert into Stores(Id, Caption) values(8, 'T8');
-insert into Stores(Id, Caption) values(8, 'T9');
+insert into Stores(Id, Caption) values(9, 'T9');
