@@ -52,13 +52,16 @@ namespace Aparts
 
             services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
 
+	        services.Configure<ImportSettings>(Configuration.GetSection("importSettings"));
+
             services.AddMvc();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<ManageUserService>();
-            services.AddTransient<ApartService>();            
+            services.AddTransient<ApartService>();
+	        services.AddTransient<ImportService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

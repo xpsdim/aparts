@@ -1,172 +1,30 @@
 ﻿@model UserRolesModel[]
 @{
-    ViewData["Title"] = "Manage user accounts";
+    ViewData["Title"] = "Manage envirounment";
 }
 <h2>@ViewData["Title"].</h2>
 @Html.AntiForgeryToken()
 
 <div id="tabstrip" style="display: none;">
-    <ul>
-        <li>Users</li>
-        <li>Stores</li>
-    </ul>
-    <div>
-        <div id="gridUsers"></div>
-    </div>
-    <div>
-        <div id="gridStores"></div>
-    </div>
+	<ul>
+		<li>Users</li>
+		<li>Stores</li>
+	</ul>
+	<div>
+		<div id="gridUsers"></div>
+	</div>
+	<div>
+		<div id="gridStores"></div>
+	</div>
 </div>
+
+<div style="margin-top: 10px;">
+	<button id="ImportData">Import</button>
+</div>
+
+<div id="dialog"></div>
 
 @section scripts
 {
-    <script>
-        var rolesDs = [];        
-        var storedDs = {
-            transport: {
-                read: "/Admin/Storelist",
-                update: {
-                    type: "POST",
-                    url: "/Admin/UpdateStore",
-                    data: {
-                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                    }
-                }
-            },
-                    
-            autoSync: true,
-            schema: {
-                model: {
-                    id: "id",
-                    fields: {
-                        id: { editable: false },
-                        caption: { editable: true },
-                        storeManName: { editable: true }
-                    }
-                }
-            }
-        };
-
-        $(document).ready(function () {
-            $("#tabstrip").kendoTabStrip({
-                value: "Users"
-            }).show();
-
-            $.ajax({ url: "/Admin/RolesList" }).done(function (data) {
-                rolesDs = data;
-            });
-
-            
-            $("#gridUsers").kendoGrid({
-                dataSource: {
-                    transport: {
-                        read: "/Admin/UserList",
-                        update: {
-                            type: "POST",
-                            url: "/Admin/UpdateUser",
-                            data: {
-                                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                            }
-                        }
-                    },
-                    pageSize: 10,
-                    autoSync: true,
-                    schema: {
-                        data: "data",
-                        model: {
-                            id: "id",
-                            fields: {
-                                id: { editable: false },
-                                email: { editable: false },
-                                roles: { editable: true, sortable: false },
-                                visibleStores: {editable: true, sortable: false}
-                            }
-                        }
-                    }
-                },
-                sortable: true,
-                editable: true,
-                pageable: {
-                    refresh: true,
-                    pageSizes: true,
-                    buttonCount: 5
-                },
-                columns: [
-                    {
-                        field: "id",
-                        title: "Id",
-                        hidden: true
-                    }, {
-                        field: "email",
-                        title: "Email",
-                        editable: false
-                    }, {
-                        field: "roles",
-                        title: "Roles",
-                        template: "#= roles.join(', ') #",
-                        editor: function (container, options) {
-                            $("<select multiple='multiple' data-bind='value :roles'/>")
-                                .appendTo(container)
-                                .kendoMultiSelect({
-                                    autoBind: false,
-                                    dataSource: rolesDs
-                                });
-                        }
-                    },
-                    {
-                        field: "visibleStores",
-                        title: "Visible Stores",
-                        template: function (dataItem) {                            
-                            var formattedStores = "";
-                            dataItem.visibleStores.forEach(function (el) {
-                                if (formattedStores != "") {
-                                    formattedStores = formattedStores + ", "
-                                }
-                                formattedStores = formattedStores + el.caption;
-                            });
-                            return formattedStores;
-                        },
-                        editor: function (container, options) {
-                            $("<select multiple='multiple' data-bind='value :visibleStores'/>")
-                                .appendTo(container)
-                                .kendoMultiSelect({
-                                    autoBind: false,
-                                    dataSource: storedDs,
-                                    dataTextField: "caption",
-                                    dataValueField: "id"
-                                });                        
-                        }
-                    }
-                ]
-            });
-
-
-            $("#gridStores").kendoGrid({
-                dataSource: storedDs,
-                sortable: true,
-                editable: true,
-                columns: [
-                    {
-                        field: "id",
-                        title: "Id"
-                    }, {
-                        field: "caption",
-                        title: "Caption"
-                    }, {
-                        field: "storeManId",
-                        title: "StoreMan Name",
-                        template: "#= storeManName #",
-                        editor: function (container, options) {
-                            $("<select data-bind='value :storeManName'/>")
-                                .appendTo(container)
-                                .kendoDropDownList({
-                                    autoBind: false,
-                                    dataSource: rolesDs
-                                });
-                        }
-                    }
-                ]
-            });
-        });
-    </script>
+    <script src="~/js/Admin.js"></script>
 }

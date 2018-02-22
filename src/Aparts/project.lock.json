@@ -3,6 +3,15 @@
   "version": 2,
   "targets": {
     ".NETFramework,Version=v4.5.2": {
+      "FirebirdSql.Data.FirebirdClient/5.9.1": {
+        "type": "package",
+        "compile": {
+          "lib/net452/FirebirdSql.Data.FirebirdClient.dll": {}
+        },
+        "runtime": {
+          "lib/net452/FirebirdSql.Data.FirebirdClient.dll": {}
+        }
+      },
       "Kendo.Mvc/2016.2.616": {
         "type": "package",
         "dependencies": {
@@ -2304,6 +2313,24 @@
     }
   },
   "libraries": {
+    "FirebirdSql.Data.FirebirdClient/5.9.1": {
+      "sha512": "qqenvVs/V6d6nfAsLxkpzspIOGiJTXcO6abLe96bx224eHQxjvmg9nge0qw1EfL6Gn/9jMV9BLfW/AOEmNOTXw==",
+      "type": "package",
+      "path": "FirebirdSql.Data.FirebirdClient/5.9.1",
+      "files": [
+        "content/app.config.transform",
+        "content/web.config.transform",
+        "firebirdsql.data.firebirdclient.5.9.1.nupkg.sha512",
+        "firebirdsql.data.firebirdclient.nuspec",
+        "lib/net40-client/FirebirdSql.Data.FirebirdClient.dll",
+        "lib/net40-client/FirebirdSql.Data.FirebirdClient.pdb",
+        "lib/net452/FirebirdSql.Data.FirebirdClient.dll",
+        "lib/net452/FirebirdSql.Data.FirebirdClient.pdb",
+        "lib/netstandard1.6/FirebirdSql.Data.FirebirdClient.dll",
+        "lib/netstandard1.6/FirebirdSql.Data.FirebirdClient.pdb",
+        "readme.txt"
+      ]
+    },
     "Kendo.Mvc/2016.2.616": {
       "sha512": "lE233oHaIIO5sfo3weM//PtOis/ZKnaSEwsJHZdmA9tPirfdWvJVkjuYvTCbzeYn/SXNWEb7gDnEQy4yeqfOxw==",
       "type": "package",
@@ -5873,6 +5900,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
+      "FirebirdSql.Data.FirebirdClient >= 5.9.1",
       "Kendo.Mvc >= 2016.2.616",
       "Microsoft.AspNet.Identity.Core >= 2.2.1",
       "Microsoft.AspNetCore.Authentication.Cookies >= 1.0.0",
