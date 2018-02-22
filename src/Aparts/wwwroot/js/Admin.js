@@ -148,6 +148,8 @@
 
 	$("#ImportData").kendoButton({
 		click: function (e) {
+			var $body = $("body");
+			kendo.ui.progress($body, true);
 			$.ajax(
 				{
 					type: 'POST',
@@ -156,21 +158,14 @@
 					success: function (response) {
 						if (!response.success) {
 							kendo.popupNotification.show(response.status, "error");
+						} else {
+							window.apartApp.showInfoDialog("Information", "Import successfully done!");
 						}
 					}
-				});
+				}).always(function() {
+					kendo.ui.progress($body, false);
+			});
 		}
 	});
-
-	$("#dialog").kendoDialog({
-		actions: [{
-			text: "OK",
-			action: function (e) {
-				// e.sender is a reference to the dialog widget object
-				alert("OK action was clicked");
-				// Returning false will prevent the closing of the dialog
-				return true;
-			},
-		}]
-	});
+	
 });

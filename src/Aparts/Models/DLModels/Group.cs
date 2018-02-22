@@ -9,7 +9,7 @@ namespace Aparts.Models.DLModels
 
 		public string Name { get; set; }
 
-		public DateTime ReplDate { get; set; }
+		public DateTime? ReplDate { get; set; }
 
 		public virtual ICollection<SubGroup> Subgroups { get; set; } = new HashSet<SubGroup>();
 	}

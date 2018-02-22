@@ -32,6 +32,8 @@ namespace Aparts.Models.DLModels
 
 		public virtual DbSet<SubGroup> SubGroups { get; set; }
 
+		public virtual DbSet<StoreItem> StoreItems { get; set; }  
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<AspNetRoleClaims>(entity =>
@@ -193,6 +195,12 @@ namespace Aparts.Models.DLModels
 					{
 						entity.HasOne(e => e.Group).WithMany(p => p.Subgroups).HasForeignKey(d => d.IdGroup);
 					});
+
+			modelBuilder.Entity<StoreItem>(
+				entity =>
+				{
+					entity.HasOne(e => e.SubGroup).WithMany(p => p.StoreItems).HasForeignKey(d => d.IdSubGroup);
+				});
 		}
 	}
 }

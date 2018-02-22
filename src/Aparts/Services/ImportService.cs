@@ -1,13 +1,10 @@
-﻿using System.Data;
-
+﻿using System;
+using System.Data;
 using Aparts.Models;
 using Aparts.Models.DLModels;
-
 using FirebirdSql.Data.FirebirdClient;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System;
 
 namespace Aparts.Services
 {
@@ -32,11 +29,12 @@ namespace Aparts.Services
 			ClearData();
 			LoadGroups();
 			LoadSubGroups();
+			LoadStoreItems();
 		}
 
 		private void ClearData()
 		{
-			var storeTables = new[] { "SubGroups", "Groups" };
+			var storeTables = new[] { "StoreItems", "SubGroups", "Groups" };
 			foreach (var table in storeTables)
 			{
 				_apartService.Context.Database.ExecuteSqlCommand($"delete {table}");
@@ -61,17 +59,67 @@ namespace Aparts.Services
 
 			foreach (DataRow row in dt.Rows)
 			{
-				_apartService.Context.SubGroups.Add(
-					new SubGroup
-					{
-						Id = (int)row.ItemArray[0],
-						IdGroup = (int)row.ItemArray[1],
-						Name = (string)row.ItemArray[2],
-						ReplDate = (DateTime)row.ItemArray[3]
-					});
+				var newSubgroup = new SubGroup
+				{
+					Id = (int)row.ItemArray[0],
+					IdGroup = (int)row.ItemArray[1],
+					Name = (string)row.ItemArray[2]
+				};
+
+				if (!(row.ItemArray[3] is DBNull))
+				{
+					newSubgroup.ReplDate = (DateTime)row.ItemArray[3];
+				}
+
+				_apartService.Context.SubGroups.Add(newSubgroup);
 			}
 			_apartService.Context.SaveChanges();
 		}
+
+		private void LoadStoreItems()
+		{
+
+			var connection = SourceConnection;
+			connection.Open();
+			var dt = new DataTable();
+
+			try
+			{
+				var da = new FbDataAdapter(@"select PRICE_NUM, ID_MASTER, KATCODE, PRICEOUT, PRICE_DETAL.REPLDATE 
+					from PRICE_DETAL join PRICE on PRICE_DETAL.ID_MASTER = PRICE.ID
+					where PRICE_NUM > 0", connection);
+				da.Fill(dt);
+			}
+			finally
+			{
+				connection.Close();
+			}
+
+			foreach (DataRow row in dt.Rows)
+			{
+				var newStoreItem = new StoreItem { Id = (int)row.ItemArray[0], IdSubGroup = (int)row.ItemArray[1] };
+
+				if (!(row.ItemArray[2] is DBNull))
+				{
+					newStoreItem.CodesByCatalog = (string)row.ItemArray[2];
+				}
+
+				if (!(row.ItemArray[3] is DBNull))
+				{
+					newStoreItem.Price = (int)row.ItemArray[3];
+				}
+
+				if (!(row.ItemArray[4] is DBNull))
+				{
+					newStoreItem.ReplDate = (DateTime)row.ItemArray[4];
+				}
+
+				_apartService.Context.StoreItems.Add(newStoreItem);
+			}
+			_apartService.Context.SaveChanges();
+
+		}
+
 
 		private void LoadGroups()
 		{
@@ -91,13 +139,17 @@ namespace Aparts.Services
 
 			foreach (DataRow row in dt.Rows)
 			{
-				_apartService.Context.Groups.Add(
-					new Group
-					{
-						Id = (int)row.ItemArray[0],
-						Name = (string)row.ItemArray[1],
-						ReplDate = (DateTime)row.ItemArray[2]
-					});
+				var newGroup = new Group
+				{
+					Id = (int)row.ItemArray[0],
+					Name = (string)row.ItemArray[1]
+				};
+
+				if (!(row.ItemArray[2] is DBNull))
+				{
+					newGroup.ReplDate = (DateTime)row.ItemArray[2];
+				}
+				_apartService.Context.Groups.Add(newGroup);
 			}
 			_apartService.Context.SaveChanges();
 		}
