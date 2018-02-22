@@ -2,18 +2,16 @@
 
 namespace Aparts.Models.DLModels
 {
-    public partial class Stores
-    {
-        public Stores()
-        {
-            UserVisibleStores = new HashSet<UserVisibleStores>();
-        }
+	public class Stores
+	{
+		public int Id { get; set; }
 
-        public int Id { get; set; }
-        public string Caption { get; set; }
-        public string Storeman { get; set; }
+		public string Caption { get; set; }
 
-        public virtual ICollection<UserVisibleStores> UserVisibleStores { get; set; }
-        public virtual AspNetUsers StoremanNavigation { get; set; }
-    }
+		public string Storeman { get; set; }
+
+		public virtual ICollection<UserVisibleStores> UserVisibleStores { get; set; } = new HashSet<UserVisibleStores>();
+
+		public virtual AspNetUsers StoremanNavigation { get; set; }
+	}
 }

@@ -3,12 +3,34 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Aparts.Models.DLModels
 {
-	public partial class ApartsDataContext : DbContext
+	public class ApartsDataContext : DbContext
 	{
 		public ApartsDataContext(DbContextOptions<ApartsDataContext> options)
 			: base(options)
 		{
 		}
+
+		public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
+
+		public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
+
+		public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
+
+		public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
+
+		public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
+
+		public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
+
+		public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+
+		public virtual DbSet<Stores> Stores { get; set; }
+
+		public virtual DbSet<UserVisibleStores> UserVisibleStores { get; set; }
+
+		public virtual DbSet<Group> Groups { get; set; }
+
+		public virtual DbSet<SubGroup> SubGroups { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -172,18 +194,5 @@ namespace Aparts.Models.DLModels
 						entity.HasOne(e => e.Group).WithMany(p => p.Subgroups).HasForeignKey(d => d.IdGroup);
 					});
 		}
-
-		public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
-		public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
-		public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
-		public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
-		public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
-		public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
-		public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
-		public virtual DbSet<Stores> Stores { get; set; }
-		public virtual DbSet<UserVisibleStores> UserVisibleStores { get; set; }
-
-		public virtual DbSet<Group> Groups { get; set; }
-		public virtual DbSet<SubGroup> SubGroups { get; set; }
 	}
 }

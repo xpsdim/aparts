@@ -1,11 +1,13 @@
 ﻿namespace Aparts.Models.DLModels
 {
-    public partial class AspNetUserRoles
-    {
-        public string UserId { get; set; }
-        public string RoleId { get; set; }
+	public class AspNetUserRoles
+	{
+		public string UserId { get; set; }
 
-        public virtual AspNetRoles Role { get; set; }
-        public virtual AspNetUsers User { get; set; }
-    }
+		public string RoleId { get; set; }
+
+		public virtual AspNetRoles Role { get; set; }
+
+		public virtual AspNetUsers User { get; set; }
+	}
 }
