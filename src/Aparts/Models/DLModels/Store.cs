@@ -2,7 +2,7 @@
 
 namespace Aparts.Models.DLModels
 {
-	public class Stores
+	public class Store
 	{
 		public int Id { get; set; }
 
@@ -13,5 +13,7 @@ namespace Aparts.Models.DLModels
 		public virtual ICollection<UserVisibleStores> UserVisibleStores { get; set; } = new HashSet<UserVisibleStores>();
 
 		public virtual AspNetUsers StoremanNavigation { get; set; }
+
+		public virtual ICollection<CurrentAmount> StoreItemsAmounts { get; set; }
 	}
 }

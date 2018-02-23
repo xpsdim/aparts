@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Aparts.Models.DLModels
 {
@@ -15,5 +16,7 @@ namespace Aparts.Models.DLModels
 		public DateTime? ReplDate { get; set; }
 
 		public virtual SubGroup SubGroup { get; set; }
+
+		public virtual ICollection<CurrentAmount> CurrentAmounts { get; set; }
 	}
 }

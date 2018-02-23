@@ -24,7 +24,7 @@ namespace Aparts.Models.DLModels
 
 		public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
 
-		public virtual DbSet<Stores> Stores { get; set; }
+		public virtual DbSet<Store> Stores { get; set; }
 
 		public virtual DbSet<UserVisibleStores> UserVisibleStores { get; set; }
 
@@ -32,7 +32,9 @@ namespace Aparts.Models.DLModels
 
 		public virtual DbSet<SubGroup> SubGroups { get; set; }
 
-		public virtual DbSet<StoreItem> StoreItems { get; set; }  
+		public virtual DbSet<StoreItem> StoreItems { get; set; }
+
+		public virtual DbSet<CurrentAmount> CurrentAmounts { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -155,7 +157,7 @@ namespace Aparts.Models.DLModels
 				entity.Property(e => e.UserName).HasMaxLength(256);
 			});
 
-			modelBuilder.Entity<Stores>(entity =>
+			modelBuilder.Entity<Store>(entity =>
 			{
 				entity.Property(e => e.Id).ValueGeneratedNever();
 
@@ -201,6 +203,13 @@ namespace Aparts.Models.DLModels
 				{
 					entity.HasOne(e => e.SubGroup).WithMany(p => p.StoreItems).HasForeignKey(d => d.IdSubGroup);
 				});
+
+			modelBuilder.Entity<CurrentAmount>(
+				entity =>
+					{
+						entity.HasOne(e => e.Store).WithMany(p => p.StoreItemsAmounts).HasForeignKey(d => d.IdStore);
+						entity.HasOne(e => e.StoreItem).WithMany(p => p.CurrentAmounts).HasForeignKey(d => d.StoreItem);
+					});
 		}
 	}
 }

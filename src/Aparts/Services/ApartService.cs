@@ -16,7 +16,7 @@ namespace Aparts.Services
 
         public ApartsDataContext Context { get { return _partContext; } }
 
-        public Stores[] GetAllStores()
+        public Store[] GetAllStores()
         {
             return _partContext.Stores.ToArray();
         }

@@ -30,15 +30,23 @@ namespace Aparts.Services
 			LoadGroups();
 			LoadSubGroups();
 			LoadStoreItems();
+			LoadCurrentBalance();
 		}
 
 		private void ClearData()
 		{
-			var storeTables = new[] { "StoreItems", "SubGroups", "Groups" };
+			var storeTables = new[] { "СurrentAmount", "StoreItems", "SubGroups", "Groups" };
 			foreach (var table in storeTables)
 			{
 				_apartService.Context.Database.ExecuteSqlCommand($"delete {table}");
 			}
+		}
+
+		private void LoadCurrentBalance()
+		{
+			var connection = SourceConnection;
+			connection.Open();
+			var dt = new DataTable();
 		}
 
 		private void LoadSubGroups()
@@ -46,6 +54,16 @@ namespace Aparts.Services
 			var connection = SourceConnection;
 			connection.Open();
 			var dt = new DataTable();
+
+			try
+			{
+				var da = new FbDataAdapter("select ID, ID_GROUP, NAME, REPLDATE from PRICE", connection);
+				da.Fill(dt);
+			}
+			finally
+			{
+				connection.Close();
+			}
 
 			try
 			{

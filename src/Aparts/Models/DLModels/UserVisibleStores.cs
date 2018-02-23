@@ -6,7 +6,7 @@
 
 		public int StoreId { get; set; }
 
-		public virtual Stores Store { get; set; }
+		public virtual Store Store { get; set; }
 
 		public virtual AspNetUsers User { get; set; }
 	}

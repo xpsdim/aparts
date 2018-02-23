@@ -43,7 +43,7 @@ namespace Aparts.Models.DLModels
 
 		public virtual ICollection<AspNetUserRoles> AspNetUserRoles { get; set; } = new HashSet<AspNetUserRoles>();
 
-		public virtual ICollection<Stores> Stores { get; set; } = new HashSet<Stores>();
+		public virtual ICollection<Store> Stores { get; set; } = new HashSet<Store>();
 
 		public virtual ICollection<UserVisibleStores> UserVisibleStores { get; set; } = new HashSet<UserVisibleStores>();
 	}
