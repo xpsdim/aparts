@@ -1,5 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using Aparts.Models
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -13,8 +12,7 @@
 }
 else
 {
-    <div id="loginForm" style="display: none;">
-        <a asp-area="" asp-controller="Account" asp-action="Register">Register</a>
-        <a asp-area="" asp-controller="Account" asp-action="Login">Log in</a>
-    </div>
+	<div id="loginForm" style="display: none;">
+		<a asp-area="" asp-controller="Account" asp-action="Login">Log in</a>
+	</div>
 }
