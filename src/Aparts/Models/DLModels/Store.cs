@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using Aparts.Models.DLModels.Documents;
+
 namespace Aparts.Models.DLModels
 {
 	public class Store
@@ -15,5 +17,7 @@ namespace Aparts.Models.DLModels
 		public virtual AspNetUsers StoremanNavigation { get; set; }
 
 		public virtual ICollection<CurrentAmount> StoreItemsAmounts { get; set; }
+
+		public virtual ICollection<IncomeDoc> IncomeDocs { get; set; }
 	}
 }

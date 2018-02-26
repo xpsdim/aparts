@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data;
-using Aparts.Models;
+using System.Linq;
 using Aparts.Models.DLModels;
+using Aparts.Models.DLModels.Documents;
+using Aparts.Models.Settings;
 using FirebirdSql.Data.FirebirdClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -15,27 +17,29 @@ namespace Aparts.Services
 		private readonly ApartService _apartService;
 
 		public bool AllowImport => _importSettings.Value.AllowImport;
+		private readonly IOptions<DocSettings> _docSettings;
 
 		public FbConnection SourceConnection => new FbConnection(_importSettings.Value.DatabaseConnectionString);
 
-		public ImportService(IOptions<ImportSettings> importSettings, ApartService apartService)
+		public ImportService(IOptions<ImportSettings> importSettings, IOptions<DocSettings> docSettings, ApartService apartService)
 		{
 			_importSettings = importSettings;
 			_apartService = apartService;
+			_docSettings = docSettings;
 		}
 
 		public void Import()
 		{
 			ClearData();
-			LoadGroups();
+			/*LoadGroups();
 			LoadSubGroups();
-			LoadStoreItems();
+			LoadStoreItems();		*/
 			LoadCurrentBalance();
 		}
 
 		private void ClearData()
 		{
-			var storeTables = new[] { "СurrentAmount", "StoreItems", "SubGroups", "Groups" };
+			var storeTables = new[] { "DocIncomeDetails", "DocIncomeHeader", "СurrentAmounts"/*, "StoreItems", "SubGroups", "Groups"*/ };
 			foreach (var table in storeTables)
 			{
 				_apartService.Context.Database.ExecuteSqlCommand($"delete {table}");
@@ -44,9 +48,76 @@ namespace Aparts.Services
 
 		private void LoadCurrentBalance()
 		{
+			// bunch of incoming documents creating
+			var stores = _apartService.Context.Stores.ToArray();
+			var incomeDocs = new IncomeDoc[stores.Count()];
+			foreach (var store in stores)
+			{
+				var newIncomeDoc = CreateIncomeDocWithNumber();
+				newIncomeDoc.Comment = $"Import of current amount from legacy store '{store.Caption}'";
+				newIncomeDoc.DocDate = DateTime.Today;
+				newIncomeDoc.IdStore = store.Id;
+				incomeDocs[store.Id] = newIncomeDoc;
+				_apartService.Context.IncomeDocs.Add(newIncomeDoc);
+				_apartService.Context.SaveChanges();
+			}
+
+			// filling of incoming documents
 			var connection = SourceConnection;
 			connection.Open();
 			var dt = new DataTable();
+
+			try
+			{
+				var da = new FbDataAdapter(@"select 
+					pd.T1, pd.T2, pd.T3, pd.T4, pd.T5, pd.T6, pd.T7, pd.T8, pd.T9, pd.T10,
+					pd.T11, pd.T12, pd.T13, pd.T14, pd.T15, pd.T16, pd.T17, pd.T18, pd.T19, pd.T20,
+					pd.PRICE_NUM, pd.PRICEIN, pd.PRICEOUT 
+					from PRICE_DETAL pd
+					join PRICE p on p.ID = pd.ID_MASTER
+					where pd.PRICE_NUM > 0
+					order by pd.PRICE_NUM", connection);
+				da.Fill(dt);
+			}
+			finally
+			{
+				connection.Close();
+			}
+
+			foreach (DataRow row in dt.Rows)
+			{
+				foreach (var doc in incomeDocs)
+				{
+					if ((int)row.ItemArray[doc.IdStore] != 0)
+					{
+						var newIncomeDocItem = new IncomeDocDetail()
+						{
+							IncomeDoc = doc,
+							IdStoreItem = (int)row.ItemArray[20],
+							Amount = (int)row.ItemArray[doc.IdStore]
+						};
+
+						if (!(row.ItemArray[21] is DBNull))
+						{
+							newIncomeDocItem.PriceIn = (int)row.ItemArray[21];
+						}
+
+						if (!(row.ItemArray[22] is DBNull))
+						{
+							newIncomeDocItem.PriceOut = (int)row.ItemArray[22];
+						}
+						_apartService.Context.IncomeDocDetails.Add(newIncomeDocItem);
+					}
+				}
+			}
+
+			/* TODO this code cause error inserting of DocNumberInt column 
+			foreach (var incomeDoc in incomeDocs)
+			{
+				incomeDoc.Commit(_apartService.Context);
+			}
+			*/
+			_apartService.Context.SaveChanges();
 		}
 
 		private void LoadSubGroups()
@@ -138,7 +209,6 @@ namespace Aparts.Services
 
 		}
 
-
 		private void LoadGroups()
 		{
 			var connection = SourceConnection;
@@ -170,6 +240,27 @@ namespace Aparts.Services
 				_apartService.Context.Groups.Add(newGroup);
 			}
 			_apartService.Context.SaveChanges();
+		}
+
+		private int GetIncomeDocumentNextNumber()
+		{
+			var today = DateTime.Today;
+			var startOfYear = new DateTime(today.Year, 1, 1);
+			var endOfYear = new DateTime(today.Year, 12, 31);
+			return
+				_apartService.Context.IncomeDocs.Where(doc => doc.DocDate >= startOfYear && doc.DocDate <= endOfYear)
+					.Max(doc => doc.DocNumberInt) + 1;
+
+		}
+
+		private IncomeDoc CreateIncomeDocWithNumber()
+		{
+			var intNum = GetIncomeDocumentNextNumber();
+			return new IncomeDoc()
+			{
+				DocNumber = $"{_docSettings.Value.ImputDocNumberPrefix}{intNum}"
+			};
+
 		}
 	}
 }

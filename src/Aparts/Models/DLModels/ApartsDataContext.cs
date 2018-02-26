@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Aparts.Models.DLModels.Documents;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Aparts.Models.DLModels
@@ -35,6 +36,10 @@ namespace Aparts.Models.DLModels
 		public virtual DbSet<StoreItem> StoreItems { get; set; }
 
 		public virtual DbSet<CurrentAmount> CurrentAmounts { get; set; }
+
+		public virtual DbSet<IncomeDoc> IncomeDocs { get; set; }
+
+		public virtual DbSet<IncomeDocDetail> IncomeDocDetails { get; set; } 
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -207,8 +212,25 @@ namespace Aparts.Models.DLModels
 			modelBuilder.Entity<CurrentAmount>(
 				entity =>
 					{
+						entity.HasKey(e => new { e.IdStoreItem, e.IdStore });
 						entity.HasOne(e => e.Store).WithMany(p => p.StoreItemsAmounts).HasForeignKey(d => d.IdStore);
-						entity.HasOne(e => e.StoreItem).WithMany(p => p.CurrentAmounts).HasForeignKey(d => d.StoreItem);
+						entity.HasOne(e => e.StoreItem).WithMany(p => p.CurrentAmounts).HasForeignKey(d => d.IdStoreItem);
+						entity.ToTable("СurrentAmounts");
+					});
+
+			modelBuilder.Entity<IncomeDoc>(
+				entity =>
+					{
+						entity.HasOne(e => e.Store).WithMany(p => p.IncomeDocs).HasForeignKey(d => d.IdStore);
+						entity.ToTable("DocIncomeHeader");
+					});
+
+			modelBuilder.Entity<IncomeDocDetail>(
+				entity =>
+					{
+						entity.ToTable("DocIncomeDetails");
+						entity.HasOne(e => e.StoreItem).WithMany(p => p.Incomes).HasForeignKey(d => d.IdStoreItem);
+						entity.HasOne(e => e.IncomeDoc).WithMany(p => p.Incomes).HasForeignKey(d => d.IdHeader);
 					});
 		}
 	}

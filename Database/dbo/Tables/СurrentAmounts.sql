@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[СurrentAmount]
+﻿CREATE TABLE [dbo].[СurrentAmounts]
 (
 	[IdStoreItem] INT NOT NULL , 
     [IdStore] INT NOT NULL,	 

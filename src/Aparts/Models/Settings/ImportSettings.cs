@@ -1,7 +1,7 @@
-﻿namespace Aparts.Models
+﻿namespace Aparts.Models.Settings
 {
-    public class ImportSettings
-    {
+	public class ImportSettings
+	{
 		public bool AllowImport { get; set; }
 
 		public string PicturesFolder { get; set; }
