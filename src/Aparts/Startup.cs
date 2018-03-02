@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +10,7 @@ using Aparts.Models.DLModels;
 using Aparts.Models.MessageModels;
 using Aparts.Models.Settings;
 using Aparts.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace Aparts
 {
@@ -23,11 +23,12 @@ namespace Aparts
 				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
 				.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
+            /*
 			if (env.IsDevelopment())
 			{
 				// For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
 				builder.AddUserSecrets();
-			}
+			}*/
 
 			builder.AddEnvironmentVariables();
 			Configuration = builder.Build();

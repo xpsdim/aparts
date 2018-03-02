@@ -5,6 +5,6 @@
     [Amount] DECIMAL(18, 2) NOT NULL, 
     CONSTRAINT PK_СurrentAmount PRIMARY KEY NONCLUSTERED ([IdStoreItem], [IdStore]),
 	CONSTRAINT FK_СurrentAmount_Store foreign key (IdStore) references Stores (ID),
-	CONSTRAINT FK_СurrentAmount_StoreItem foreign key (IdStoreItem) references Stores (ID),
+	CONSTRAINT FK_СurrentAmount_StoreItem foreign key (IdStoreItem) references StoreItems (ID),
 	Index IDX_IdStoreItem CLUSTERED (IdStoreItem)
 )

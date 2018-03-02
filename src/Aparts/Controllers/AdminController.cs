@@ -87,7 +87,7 @@ namespace Aparts.Controllers
 			}
 
 			// syncronizing visible stores
-			var currentUserStores = _apartService.Context.AspNetUsers.Single(u => u.Id == user.Id).UserVisibleStores.ToList();
+			// var currentUserStores = _apartService.Context.AspNetUsers.Single(u => u.Id == user.Id).UserVisibleStores.ToList();
 			
 			return JsOk();
 		}
@@ -106,7 +106,7 @@ namespace Aparts.Controllers
 					}));
 		}
 
-		public async Task<IActionResult> ImportData()
+		public IActionResult ImportData()
 		{
 			if (!_importService.AllowImport)
 			{

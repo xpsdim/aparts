@@ -44,6 +44,20 @@ namespace Aparts.Models.DLModels.Documents
 				if (docItem.Amount != null)
 				{
 					itemAmount.Amount = itemAmount.Amount + docItem.Amount.Value;
+					if (docItem.PriceIn != null || docItem.PriceOut != null)
+					{
+						var storeItem = context.StoreItems.Single(si => si.Id == docItem.IdStoreItem);
+
+						if (docItem.PriceOut != null)
+						{
+							storeItem.Price = docItem.PriceOut;
+						}
+
+						if (docItem.PriceIn!= null)
+						{
+							storeItem.PriceIn = docItem.PriceIn;
+						}
+					}
 				}
 				if ((double)Math.Abs(itemAmount.Amount) <= 0.01)
 				{

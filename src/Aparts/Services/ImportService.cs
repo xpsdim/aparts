@@ -31,18 +31,19 @@ namespace Aparts.Services
 		public void Import()
 		{
 			ClearData();
-			/*LoadGroups();
+			LoadGroups();
 			LoadSubGroups();
-			LoadStoreItems();		*/
+			LoadStoreItems();
 			LoadCurrentBalance();
 		}
 
 		private void ClearData()
 		{
-			var storeTables = new[] { "DocIncomeDetails", "DocIncomeHeader", "СurrentAmounts"/*, "StoreItems", "SubGroups", "Groups"*/ };
+			var storeTables = new[] { "DocIncomeDetails", "DocIncomeHeader", "СurrentAmounts", "StoreItems", "SubGroups", "Groups" };
 			foreach (var table in storeTables)
 			{
-				_apartService.Context.Database.ExecuteSqlCommand($"delete {table}");
+				var delSql = $"delete from {table}";
+				_apartService.Context.Database.ExecuteSqlCommand(delSql);
 			}
 		}
 
@@ -59,8 +60,9 @@ namespace Aparts.Services
 				newIncomeDoc.IdStore = store.Id;
 				incomeDocs[store.Id] = newIncomeDoc;
 				_apartService.Context.IncomeDocs.Add(newIncomeDoc);
-				_apartService.Context.SaveChanges();
 			}
+
+			_apartService.Context.SaveChanges();
 
 			// filling of incoming documents
 			var connection = SourceConnection;
@@ -110,13 +112,12 @@ namespace Aparts.Services
 					}
 				}
 			}
-
-			/* TODO this code cause error inserting of DocNumberInt column 
+			
 			foreach (var incomeDoc in incomeDocs)
 			{
-				incomeDoc.Commit(_apartService.Context);
+				_apartService.CommitDocument(incomeDoc);
 			}
-			*/
+			
 			_apartService.Context.SaveChanges();
 		}
 
@@ -135,17 +136,7 @@ namespace Aparts.Services
 			{
 				connection.Close();
 			}
-
-			try
-			{
-				var da = new FbDataAdapter("select ID, ID_GROUP, NAME, REPLDATE from PRICE", connection);
-				da.Fill(dt);
-			}
-			finally
-			{
-				connection.Close();
-			}
-
+		
 			foreach (DataRow row in dt.Rows)
 			{
 				var newSubgroup = new SubGroup
@@ -247,10 +238,12 @@ namespace Aparts.Services
 			var today = DateTime.Today;
 			var startOfYear = new DateTime(today.Year, 1, 1);
 			var endOfYear = new DateTime(today.Year, 12, 31);
-			return
-				_apartService.Context.IncomeDocs.Where(doc => doc.DocDate >= startOfYear && doc.DocDate <= endOfYear)
-					.Max(doc => doc.DocNumberInt) + 1;
-
+			var maxNumberInThisYear = _apartService.Context.IncomeDocs
+				.Where(doc => doc.DocDate >= startOfYear && doc.DocDate <= endOfYear)
+				.Select(doc => doc.DocNumberInt)
+				.DefaultIfEmpty(0)
+				.Max();
+			return ++maxNumberInThisYear;
 		}
 
 		private IncomeDoc CreateIncomeDocWithNumber()

@@ -1,16 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4DE2FD6D-84A3-48C7-8315-7A0C1099E2A4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{91A4A25D-EC2C-4BE1-BE0B-6D6DA78312C7}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Aparts", "src\Aparts\Aparts.xproj", "{E042136A-C1AE-4869-B741-BE77F96E2F0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aparts", "src\Aparts\Aparts.csproj", "{E042136A-C1AE-4869-B741-BE77F96E2F0D}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database", "Database\Database.sqlproj", "{851082A5-7615-42A9-9794-C74D69546BC2}"
 EndProject
@@ -37,5 +34,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E042136A-C1AE-4869-B741-BE77F96E2F0D} = {4DE2FD6D-84A3-48C7-8315-7A0C1099E2A4}
 		{851082A5-7615-42A9-9794-C74D69546BC2} = {4DE2FD6D-84A3-48C7-8315-7A0C1099E2A4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0BCF8FEF-263A-4818-B88F-B538039C1147}
 	EndGlobalSection
 EndGlobal

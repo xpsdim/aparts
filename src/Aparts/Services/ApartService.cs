@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Aparts.Models.ApartModels;
 using Aparts.Models.DLModels;
+using Aparts.Models.DLModels.Documents;
 
 namespace Aparts.Services
 {
@@ -18,6 +19,16 @@ namespace Aparts.Services
 		public Store[] GetAllStores()
 		{
 			return _partContext.Stores.ToArray();
+		}
+
+		public void CommitDocument(ICommitableDoc doc)
+		{
+			doc.Commit(Context);
+		}
+
+		public void RollbackDocument(ICommitableDoc doc)
+		{
+			doc.Rollback(Context);
 		}
 
 		public StoreViewModel[] GetVisibleStores(string userId)
