@@ -1,6 +1,6 @@
-﻿@model UserRolesModel[]
+﻿@model Aparts.Models.AdminViewModelas.AdminPageOptions
 @{
-    ViewData["Title"] = "Manage envirounment";
+	ViewData["Title"] = "Manage envirounment";
 }
 <h2>@ViewData["Title"].</h2>
 @Html.AntiForgeryToken()
@@ -18,11 +18,14 @@
 	</div>
 </div>
 
-<div style="margin-top: 10px;">
-	<button id="ImportData">Import</button>
-</div>
+@if (Model.AllowImport)
+{
+	<div style="margin-top: 10px;">
+		<button id="ImportData">Import</button>
+	</div>
+}
 
 @section scripts
 {
-	<script src="~/js/admin.js"></script>
+<script src="~/js/admin.js"></script>
 }

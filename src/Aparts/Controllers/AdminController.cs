@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Aparts.Models;
 using Aparts.Models.AccountViewModels;
+using Aparts.Models.AdminViewModelas;
 using Aparts.Services;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -31,7 +32,10 @@ namespace Aparts.Controllers
 
 		public IActionResult Index()
 		{
-			return View();
+			return View(new AdminPageOptions()
+			{
+				AllowImport = _importService.AllowImport
+			});
 		}
 
 		public async Task<IActionResult> UserList(DataSourceRequest request)
