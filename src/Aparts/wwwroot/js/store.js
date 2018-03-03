@@ -7,7 +7,11 @@
 			schema: {
 				data: "data"
 			},
-			serverSorting: false
+			serverSorting: false,
+			sort: {
+				field: "name",
+				dir: "asc"
+			}
 		},
 		sortable: true,
 		//detailInit: detailInit,
@@ -17,7 +21,7 @@
 		columns: [
 			{
 				field: "name",
-				title: "Gtoup name"
+				title: "Group name"
 			}
 		]
 	});
