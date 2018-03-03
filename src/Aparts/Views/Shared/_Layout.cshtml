@@ -88,6 +88,17 @@
                         }
                         </text>
 				}
+				if (Context.User.IsInRole("Seller"))
+				{
+					<text>
+						,
+						{
+							type: "button",
+							text: "Store",
+							url: "@Url.Content("~/Store")"
+						}
+					</text>
+				}
 			}
 		]
 	});
