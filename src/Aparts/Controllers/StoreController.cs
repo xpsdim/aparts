@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aparts.Models.StoreViewModels;
@@ -29,11 +27,19 @@ namespace Aparts.Controllers
 			return View();
 		}
 
-		public IActionResult GroupList()
+		public async Task<IActionResult> GroupList()
 		{
 			var groups = _apartService.Context.Groups
 				.Select(g => new GroupViewModel(g));
-			return Json(groups.ToDataSourceResult(new DataSourceRequest()));
+			return Json(await groups.ToDataSourceResultAsync(new DataSourceRequest()));
+		}
+
+		public async Task<IActionResult> Subgroups([DataSourceRequest] DataSourceRequest request)
+		{
+			var subGroups = await _apartService.Context.SubGroups
+				.Select(sub => new SubGroupViewModel(sub))
+				.ToDataSourceResultAsync(request);
+			return Json(subGroups);
 		}
 	}
 }

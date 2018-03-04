@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-	var element = $("#grid").kendoGrid({
+	$("#grid").kendoGrid({
 		dataSource: {
 			transport: {
 				read: "/Store/GroupList"
@@ -14,10 +14,10 @@
 			}
 		},
 		sortable: true,
-		//detailInit: detailInit,
-		/*dataBound: function () {
+		detailInit: subgroupsInit,
+		dataBound: function () {
 			this.expandRow(this.tbody.find("tr.k-master-row").first());
-		},*/
+		},
 		columns: [
 			{
 				field: "name",
@@ -25,4 +25,33 @@
 			}
 		]
 	});
+
+	function subgroupsInit(e) {
+		$("<div/>").appendTo(e.detailCell).kendoGrid({
+			dataSource: {
+				type: "aspnetmvc-ajax",
+				serverPaging: true,
+				serverFiltering: true,
+				serverSorting: true,
+				transport: {
+					read: {
+						url: "/Store/Subgroups",
+						type: "POST"
+					}
+				},
+				filter: { field: "idGroup", operator: "eq", value: e.data.id },
+				schema: {
+					data: "data",
+					model: { id: "id" }
+				}
+			},
+			scrollable: false,
+			columns: [
+				{
+					field: "name",
+					title: "Name"
+				}
+			]
+		});
+	}
 });
