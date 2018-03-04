@@ -1,9 +1,12 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Aparts.Models;
+using Aparts.Models.DLModels;
 using Aparts.Models.StoreViewModels;
 using Aparts.Services;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aparts.Controllers
@@ -11,10 +14,12 @@ namespace Aparts.Controllers
 	public class StoreController : Controller
 	{
 		private readonly ApartService _apartService;
+		private readonly UserManager<ApplicationUser> _userManager;
 
-		public StoreController(ApartService apartService)
+		public StoreController(ApartService apartService, UserManager<ApplicationUser> userManager)
 		{
 			_apartService = apartService;
+			_userManager = userManager;
 		}
 
 		public IActionResult Index()
@@ -40,6 +45,16 @@ namespace Aparts.Controllers
 				.Select(sub => new SubGroupViewModel(sub))
 				.ToDataSourceResultAsync(request);
 			return Json(subGroups);
+		}
+
+		public async Task<IActionResult> StoreItems([DataSourceRequest] DataSourceRequest request)
+		{
+			var storeList = _apartService.GetVisibleStores(_userManager.GetUserId(User));
+
+			var storeItems = await _apartService.Context.StoreItems
+				.Select(item => new StoreItemViewModel(item, storeList))
+				.ToDataSourceResultAsync(request);
+			return Json(storeItems);
 		}
 	}
 }
