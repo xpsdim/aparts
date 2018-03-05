@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Aparts.Models;
 using Aparts.Models.AccountViewModels;
 using Aparts.Models.AdminViewModelas;
+using Aparts.Models.DLModels;
 using Aparts.Services;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -40,9 +41,9 @@ namespace Aparts.Controllers
 
 		public async Task<IActionResult> UserList(DataSourceRequest request)
 		{
-			var users = _manageUserService.GetUsersForManage()
-				.Where(u => u.Id != _userManager.GetUserId(User));
-			var usersPage = users.ToDataSourceResult(request);
+			var users = _manageUserService.GetUsersForManage();
+			//	.Where(u => u.Id != _userManager.GetUserId(User));
+			var usersPage = await users.ToDataSourceResultAsync(request);
 			var model = new List<UserRolesModel>();
 			foreach (ApplicationUser user in usersPage.Data)
 			{
@@ -91,7 +92,36 @@ namespace Aparts.Controllers
 			}
 
 			// syncronizing visible stores
-			// var currentUserStores = _apartService.Context.AspNetUsers.Single(u => u.Id == user.Id).UserVisibleStores.ToList();
+			var aspNetUser = _apartService.Context.AspNetUsers.Single(u => u.Id == user.Id);
+			var currentUserStores = _apartService.Context.UserVisibleStores
+				.Where(vs => vs.UserId == aspNetUser.Id).ToList();
+			var newUserStores = model.VisibleStores;
+			if (newUserStores == null)
+			{
+				aspNetUser.UserVisibleStores.Clear();
+			}
+			else
+			{
+				foreach (var deletedStore in currentUserStores)
+				{
+					if (!newUserStores.Select(s => s.Id).Contains(deletedStore.StoreId))
+					{
+						currentUserStores.Remove(deletedStore);
+					}
+					else
+					{
+						newUserStores = newUserStores.Where(s => s.Id != deletedStore.StoreId).ToArray();
+					}
+				}
+
+				foreach (var newStore in newUserStores)
+				{
+					_apartService.Context.UserVisibleStores
+						.Add(new UserVisibleStores() {StoreId = newStore.Id, UserId = model.Id});
+				}
+			}
+
+			await _apartService.Context.SaveChangesAsync();
 			
 			return JsOk();
 		}

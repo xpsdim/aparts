@@ -33,14 +33,16 @@ namespace Aparts.Services
 
 		public StoreViewModel[] GetVisibleStores(string userId)
 		{
-			var user = _partContext.AspNetUsers.Single(u => u.Id == userId);
-			return user.UserVisibleStores
+			var visibleStoreIds =
+				_partContext.UserVisibleStores.Where(vs => vs.UserId == userId).Select(vs => vs.StoreId);
+			return _partContext.Stores.Where(s => visibleStoreIds.Contains(s.Id))
 					.Select(us => new StoreViewModel()
 					{
-						Id = us.Store.Id,
-						Caption = us.Store.Caption,
-						Storeman = us.Store.Storeman
+						Id = us.Id,
+						Caption = us.Caption,
+						Storeman = us.Storeman
 					}).ToArray();
+			
 		}
 	}
 }

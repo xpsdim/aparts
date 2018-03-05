@@ -140,6 +140,14 @@ namespace Aparts.Models.DLModels
 				entity.Property(e => e.Name).HasMaxLength(450);
 			});
 
+			modelBuilder.Entity<UserVisibleStores>(entity =>
+			{
+				entity.HasKey(vs => new {vs.UserId, vs.StoreId});
+
+				entity.HasOne(e => e.Store).WithMany(p => p.UserVisibleStores).HasForeignKey(d => d.StoreId);
+				entity.HasOne(e => e.User).WithMany(p => p.UserVisibleStores).HasForeignKey(d => d.UserId);
+			});
+
 			modelBuilder.Entity<AspNetUsers>(entity =>
 			{
 				entity.HasIndex(e => e.NormalizedEmail)
@@ -160,6 +168,8 @@ namespace Aparts.Models.DLModels
 					.HasMaxLength(256);
 
 				entity.Property(e => e.UserName).HasMaxLength(256);
+
+				entity.HasMany(e => e.UserVisibleStores).WithOne(p => p.User).HasForeignKey(d => d.UserId);
 			});
 
 			modelBuilder.Entity<Store>(entity =>
@@ -177,24 +187,8 @@ namespace Aparts.Models.DLModels
 					.HasForeignKey(d => d.Storeman)
 					.OnDelete(DeleteBehavior.SetNull)
 					.HasConstraintName("FK_Storeman_UserId");
-			});
 
-			modelBuilder.Entity<UserVisibleStores>(entity =>
-			{
-				entity.HasKey(e => new { e.UserId, e.StoreId })
-					.HasName("PK__UserVisi__1430E35C337D149B");
-
-				entity.Property(e => e.UserId).HasMaxLength(450);
-
-				entity.HasOne(d => d.Store)
-					.WithMany(p => p.UserVisibleStores)
-					.HasForeignKey(d => d.StoreId)
-					.HasConstraintName("FK_VisibleStore_StoreId");
-
-				entity.HasOne(d => d.User)
-					.WithMany(p => p.UserVisibleStores)
-					.HasForeignKey(d => d.UserId)
-					.HasConstraintName("FK_VisibleStore_UserId");
+				//entity.HasMany(e => e.UserVisibleStores).WithOne(p => p.Store).HasForeignKey(d => d.StoreId);
 			});
 
 			modelBuilder.Entity<SubGroup>(
