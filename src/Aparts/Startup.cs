@@ -86,7 +86,8 @@ namespace Aparts
 
 			app.UseStaticFiles();
 
-			app.UseIdentity();
+			//app.UseIdentity(); // obsolete
+            app.UseAuthentication();
 
 			app.SeedData();
 

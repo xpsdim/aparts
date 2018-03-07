@@ -8,7 +8,7 @@
 
 	kendo.popupNotification = $("#popupNotification").kendoNotification().data("kendoNotification");
 	
-	window.apartApp = {};
+    window.apartApp = window.apartApp || {};
 
 	window.apartApp.processDoneDlg = $("#infoDialog").kendoDialog({
 		visible: false,
@@ -18,9 +18,9 @@
 		}]
 	}).data("kendoDialog");
 
-	window.apartApp.showInfoDialog = function(title, message) {
-		window.apartApp.processDoneDlg.title(title);
-		window.apartApp.processDoneDlg.content(message);
-		window.apartApp.processDoneDlg.open();
-	}
+    window.apartApp.showInfoDialog = function (title, message) {
+        window.apartApp.processDoneDlg.title(title);
+        window.apartApp.processDoneDlg.content(message);
+        window.apartApp.processDoneDlg.open();
+    };
 });

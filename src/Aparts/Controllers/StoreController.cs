@@ -24,7 +24,12 @@ namespace Aparts.Controllers
 
 		public IActionResult Index()
 		{
-			return View();
+            var model = new StorePageOptions()
+            {
+                VisibleStores = _apartService.GetVisibleStores(_userManager.GetUserId(User))
+            };
+
+            return View(model);
 		}
 
 		public IActionResult Manage()
@@ -49,11 +54,19 @@ namespace Aparts.Controllers
 
 		public async Task<IActionResult> StoreItems([DataSourceRequest] DataSourceRequest request)
 		{
-			var storeList = _apartService.GetVisibleStores(_userManager.GetUserId(User));
+            var ammoumtList = _apartService.GetCurrenAmountsVisibleToUser(_userManager.GetUserId(User));
 
 			var storeItems = await _apartService.Context.StoreItems
-				.Select(item => new StoreItemViewModel(item, storeList))
+                .Select(item => new StoreItemViewModel(item))
 				.ToDataSourceResultAsync(request);
+
+            foreach(StoreItemViewModel item in storeItems.Data)
+            {
+                var amounts = ammoumtList.Where(a => a.IdStoreItem == item.Id).ToArray();
+                item.SetAmounts(amounts);
+
+            }
+
 			return Json(storeItems);
 		}
 	}

@@ -97,8 +97,8 @@
 				template: function (dataItem) {
 					var formattedStores = "";
 					dataItem.visibleStores.forEach(function (el) {
-						if (formattedStores != "") {
-							formattedStores = formattedStores + ", "
+						if (formattedStores !== "") {
+                            formattedStores = formattedStores + ", ";
 						}
 						formattedStores = formattedStores + el.caption;
 					});

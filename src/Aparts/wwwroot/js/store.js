@@ -1,4 +1,10 @@
 ﻿$(document).ready(function () {
+
+    function getRightAlignTemplate(field) {
+        var tpl1 = '<div style="text-align:right;">#= ', tpl2 = '#</div>';
+        return tpl1 + field + " != null ? " + field + " : '' " + tpl2;
+    }
+
 	$("#grid").kendoGrid({
 		dataSource: {
 			transport: {
@@ -82,14 +88,22 @@
 				}
 			},
 			scrollable: false,
-			columns: function(e) {
-				var columns = [
-					{ field: "codesByCatalog", title: "Codes" },
-					{ field: "priceIn", title: "Price In" },
-					{ field: "price", title: "Price" }
-				];
+            columns: function (e) {
+                
+                var columns = [
+                    { field: "id", title: "Id", width: 80 },
+					{ field: "codesByCatalog", title: "Codes", width: 500 },
+                    { field: "priceIn", title: "Price In", width: 100, template: getRightAlignTemplate("priceIn") },
+                    { field: "price", title: "Price", width: 100, template: getRightAlignTemplate("price") }
+                ];
+                $.each(window.apartApp.visibleStores, function (key, value) {
+                    value.width = 50;
+                    value.template = getRightAlignTemplate(value.field)
+                    columns.push(value);
+                });
+
 				return columns;
 			}()
 		});
-	}
+    }
 });

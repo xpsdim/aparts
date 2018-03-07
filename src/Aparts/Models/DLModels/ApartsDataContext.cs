@@ -201,6 +201,7 @@ namespace Aparts.Models.DLModels
 				entity =>
 				{
 					entity.HasOne(e => e.SubGroup).WithMany(p => p.StoreItems).HasForeignKey(d => d.IdSubGroup);
+                    //entity.HasMany(e => e.CurrentAmounts).WithOne(p => p.StoreItem).HasForeignKey(d => d.IdStoreItem);
 				});
 
 			modelBuilder.Entity<CurrentAmount>(

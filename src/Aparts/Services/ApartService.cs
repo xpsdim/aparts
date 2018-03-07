@@ -31,7 +31,7 @@ namespace Aparts.Services
 			doc.Rollback(Context);
 		}
 
-		public StoreViewModel[] GetVisibleStores(string userId)
+		public IQueryable<StoreViewModel> GetVisibleStores(string userId)
 		{
 			var visibleStoreIds =
 				_partContext.UserVisibleStores.Where(vs => vs.UserId == userId).Select(vs => vs.StoreId);
@@ -41,8 +41,13 @@ namespace Aparts.Services
 						Id = us.Id,
 						Caption = us.Caption,
 						Storeman = us.Storeman
-					}).ToArray();
-			
+					});			
 		}
+
+        public IQueryable<CurrentAmount> GetCurrenAmountsVisibleToUser(string userId)
+        {
+            var visibleStores = GetVisibleStores(userId);
+            return Context.CurrentAmounts.Where(ca => visibleStores.Select(s => s.Id).Contains(ca.IdStore));
+        }
 	}
 }

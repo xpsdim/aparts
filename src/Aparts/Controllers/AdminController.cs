@@ -52,7 +52,7 @@ namespace Aparts.Controllers
 					Email = user.Email,
 					Id = user.Id,
 					Roles = (await _userManager.GetRolesAsync(user)).ToArray(),
-					VisibleStores = _apartService.GetVisibleStores(user.Id)
+					VisibleStores = _apartService.GetVisibleStores(user.Id).ToArray()
 				});
 			}
 
