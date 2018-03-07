@@ -106,7 +106,7 @@ namespace Aparts.Controllers
 				{
 					if (!newUserStores.Select(s => s.Id).Contains(deletedStore.StoreId))
 					{
-						currentUserStores.Remove(deletedStore);
+                        _apartService.Context.UserVisibleStores.Remove(deletedStore);
 					}
 					else
 					{
